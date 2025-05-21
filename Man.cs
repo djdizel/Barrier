@@ -10,17 +10,27 @@ namespace Barrier
 {
     class Man
     {
-        public delegate void Event();
-        public event Event Event1;
-        public event Event Event2;
-        public void Message1()
+        public string Name { get; private set; }
+
+        public Man(string name)
         {
-            Console.WriteLine("Человек идет");
-        }
-        public void Message2()
-        {
-            Console.WriteLine("Человек стоит");
+            Name = name;
         }
 
+        public void HandleEvent1(object sender)
+        {
+            Console.WriteLine($"{Name}, иду.");
+
+            if (sender is Barrier barrier)
+            {
+                barrier.Event1 -= HandleEvent1;
+                barrier.Event2 -= HandleEvent2;
+            }
+        }
+
+        public void HandleEvent2(object sender)
+        {
+            Console.WriteLine($"{Name}, стою.");
+        }
     }
 }
